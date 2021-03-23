@@ -112,7 +112,7 @@
 </body>
 
 <script>
-   
+    $(document).ready(function() {
 
         $('#login, #signup').hide();
 
@@ -142,13 +142,11 @@
 
                     event.preventDefault();
                 });
-            });
         });
-   
+    });
 
     $('#signup_form').submit(function(event) {
-        $.post('/login', 
-            {
+        $.post('/login', {
                 email: $('#signup_email').val(),
                 password: $('#signup_password').val(),
                 con_password: $('#confirm_password').val(),
@@ -175,11 +173,13 @@
                 } else if (data.nameWarning) {
                     $('#nameWarning').text(data.nameWarning).show();
                     $('#passWarning, #con_passWarning, #emailWarning').hide();
+                    '/login', '/login',
                 }
                 event.preventDefault();
             });
-        });
     });
 </script>
+
+</html>t>
 
 </html>
