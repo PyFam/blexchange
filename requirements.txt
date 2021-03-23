@@ -1,0 +1,5 @@
+flask
+flask-mail
+mysql.connector
+psycopg2
+gunicorn
