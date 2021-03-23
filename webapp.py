@@ -3,18 +3,23 @@ from hashlib import md5
 from DBcm import UseDB
 
 app = Flask(__name__)
+
 app.secret_key = 'Thisismyapp'
-app.config['db'] = {'host':'localhost', 'user':'incharge', 'password':'iamincharge', 'database':'dbexchange'}
+
+app.config['db'] = {'host':'localhost',
+                    'user':'incharge',
+                    'password':'iamincharge',
+                    'database':'dbexchange'}
 
 @app.route('/')
 def index():
-    if 'logged_in' in session:
-        Btn = 'logout'
-        return render_template('index.html', btn = Btn)
+    # btn1, btn2 = ('login', 'signup') if 'logged_in' not in session else ('logout', None)
+    if 'logged_in' not in session:    
+        return render_template('index.html',
+                               btn = 'login',
+                               btn2 = 'signup')
 
-    Login, Signup = 'login', 'signup'        
-    return render_template('index.html', btn = Login, btn2 = Signup)
-
+    return render_template('index.html', btn='logout')
 
 @app.route('/login', methods=['POST','GET'])
 def do_log():
@@ -76,7 +81,7 @@ def do_log():
 @app.route('/links', methods=['POST', 'GET'])
 def links():
 
-    return "This is the links page"
+    return "<h1>This is the links page</h1>"
     # if request.method == 'POST':
     #     if 'logged_in' in session:
     #         data = (request.form['link'], request.form['name'], request.form['niche'], session['iden'], request.remote_addr, request.user_agent.browser)
@@ -95,4 +100,8 @@ def links():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=9999)
+
+    import webbrowser
+    webbrowser.open('http://localhost:9999/')
+
