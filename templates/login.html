@@ -112,37 +112,35 @@
 </body>
 
 <script>
-    $(document).ready(function() {
+    $('#login, #signup').hide();
 
-        $('#login, #signup').hide();
+    $('#login_form').submit(function(event) {
+        $.post('/login', {
+                loginEmail: $('#login_email').val(),
+                loginPassword: $('#login_password').val(),
+                type: $('#type').val()
+            },
 
-        $('#login_form').submit(function(event) {
-            $.post('/login', {
-                    loginEmail: $('#login_email').val(),
-                    loginPassword: $('#login_password').val(),
-                    type: $('#type').val()
-                },
+            function(data) {
+                // console.log('Done')
+                if (data.missingData) {
+                    $('#login_warning').text(data.missingData).show();
+                    $('#password_warning').hide();
 
-                function(data) {
-                    // console.log('Done')
-                    if (data.missingData) {
-                        $('#login_warning').text(data.missingData).show();
-                        $('#password_warning').hide();
+                } else if (data.emailError) {
+                    console.log(data.emailError)
+                    $('#login_warning').text(data.emailError).show();
+                    $('#password_warning').hide();
 
-                    } else if (data.emailError) {
-                        console.log(data.emailError)
-                        $('#login_warning').text(data.emailError).show();
-                        $('#password_warning').hide();
+                } else if (data.wrongPass) {
+                    $('#password_warning').text(data.wrongPass);
+                    $('#password_warning').show();
+                    $('#login_warning').hide();
+                }
 
-                    } else if (data.wrongPass) {
-                        $('#password_warning').text(data.wrongPass);
-                        $('#password_warning').show();
-                        $('#login_warning').hide();
-                    }
-
-                    event.preventDefault();
-                });
-        });
+                event.preventDefault();
+            }
+        );
     });
 
     $('#signup_form').submit(function(event) {
@@ -155,6 +153,7 @@
             },
 
             function(data) {
+
                 if (data.passError) {
                     $('#passWarning').text(data.passError).show();
                     $('#con_passWarning, #nameWarning, #emailWarning').hide();
@@ -173,10 +172,10 @@
                 } else if (data.nameWarning) {
                     $('#nameWarning').text(data.nameWarning).show();
                     $('#passWarning, #con_passWarning, #emailWarning').hide();
-                    '/login', '/login',
                 }
                 event.preventDefault();
             });
+
     });
 </script>
 
