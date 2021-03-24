@@ -81,6 +81,11 @@
                                 <small class="text-danger" style="display: none;" id="nameWarning"></small>
                             </div>
                             <div class="col-md-6 mb-3">
+                                <label class="form-label">Username</label>
+                                <input type="text" id="username" class="form-control" placeholder="John123">
+                                <small class="text-danger" style="display: none;" id="usernameWarning"></small>
+                            </div>
+                            <div class="col-12 mb-3">
                                 <label class="form-label">Email</label>
                                 <input type="email" id="signup_email" class="form-control" placeholder="name@email.com">
                                 <small class="text-danger" style="display: none;" id="emailWarning"></small>
@@ -137,6 +142,9 @@
                     $('#password_warning').show();
                     $('#login_warning').hide();
                 }
+                else{
+                    location.href='/links'
+                }
 
                 event.preventDefault();
             }
@@ -149,6 +157,7 @@
                 password: $('#signup_password').val(),
                 con_password: $('#confirm_password').val(),
                 name: $('#name').val(),
+                username: $('#username').val(),
                 type: $('#type2').val()
             },
 
@@ -156,22 +165,28 @@
 
                 if (data.passError) {
                     $('#passWarning').text(data.passError).show();
-                    $('#con_passWarning, #nameWarning, #emailWarning').hide();
+                    $('#con_passWarning, #nameWarning, #emailWarning, #usernameWarning').hide();
                 } else if (data.con_passWarning) {
                     $('#con_passWarning').text(data.con_passWarning).show();
-                    $('#passWarning, #nameWarning, #emailWarning').hide();
+                    $('#passWarning, #nameWarning, #emailWarning, #usernameWarning').hide();
                 } else if (data.passWarning) {
                     $('#passWarning').text(data.passWarning).show();
-                    $('#con_passWarning, #nameWarning, #emailWarning').hide();
+                    $('#con_passWarning, #nameWarning, #emailWarning, #usernameWarning').hide();
                 } else if (data.emailWarning) {
                     $('#emailWarning').text(data.emailWarning).show();
-                    $('#passWarning, #con_passWarning, #nameWarning').hide();
+                    $('#passWarning, #con_passWarning, #nameWarning, #usernameWarning').hide();
                 } else if (data.usedEmail) {
                     $('#emailWarning').text(data.usedEmail).show();
-                    $('#passWarning, #con_passWarning, #nameWarning').hide();
+                    $('#passWarning, #con_passWarning, #nameWarning, #usernameWarning').hide();
                 } else if (data.nameWarning) {
                     $('#nameWarning').text(data.nameWarning).show();
-                    $('#passWarning, #con_passWarning, #emailWarning').hide();
+                    $('#passWarning, #con_passWarning, #emailWarning, #usernameWarning').hide();
+                } else if (data.usernameWarning) {
+                    $('#usernameWarning').text(data.usernameWarning).show();
+                    $('#passWarning, #con_passWarning, #emailWarning, #nameWarning').hide();
+                }
+                else{
+                    location.href='/links'
                 }
                 event.preventDefault();
             });
