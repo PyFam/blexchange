@@ -6,10 +6,10 @@ app = Flask(__name__)
 
 app.secret_key = 'Thisismyapp'
 
-app.config['db'] = {'host':'localhost',
-                    'user':'incharge',
-                    'password':'iamincharge',
-                    'database':'dbexchange'}
+app.config['db'] = {'host':'ec2-52-44-31-100.compute-1.amazonaws.com',
+                    'user':'tjvwrbzksmtbkr',
+                    'password':'36305b857bb6408778d433cd9485a32828ed7295843c2e5aaa0801e1bf33813e',
+                    'database':'dbitnrv2i3ic45'}
 
 @app.route('/')
 def index():
