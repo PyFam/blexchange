@@ -6,10 +6,10 @@ app = Flask(__name__)
 
 app.secret_key = 'Thisismyapp'
 
-app.config['db'] = {'host':'ec2-52-44-31-100.compute-1.amazonaws.com',
-                    'user':'tjvwrbzksmtbkr',
-                    'password':'36305b857bb6408778d433cd9485a32828ed7295843c2e5aaa0801e1bf33813e',
-                    'database':'dbitnrv2i3ic45'}
+app.config['db'] = {'host':'blexchange.mysql.pythonanywhere-services.com',
+                    'user':'blexchange',
+                    'password':'Nov52002#',
+                    'database':'blexchange$default'}
 
 @app.route('/')
 def index():
@@ -68,7 +68,7 @@ def do_log():
                                                     return jsonify({"usedEmail":"Email has been used by another user"})
                                         _SQL = '''insert into users_info (Name, email, username, password, IP, browser_string)
                                         values (%s, %s, %s, %s, %s)'''
-                                        cursor.execute(_SQL, (name, email, username, password, IP, browers_string))
+                                        cursor.execute(_SQL, (name, email, username, password, IP, brower_string))
                                         session['logged_in'] = True
                                         session['username'] = username
                                         return redirect('/links')
@@ -89,7 +89,7 @@ def links():
 
     if request.method == 'POST':
         if 'logged_in' in session:
-            data = (request.form['link'], request.form['name'], request.form['niche'], session['iden'], request.remote_addr, request.user_agent.browser)
+            data = (request.form['link'], request.form['name'], request.form['niche'], session['username'], request.remote_addr, request.user_agent.browser)
             if request.form['link']:
                 if request.form['name']:
                     if request.form['niche']:
@@ -97,6 +97,11 @@ def links():
                             _SQL = '''insert into links_log (link, name, niche, identifier, IP, browser_string
                             values(%s, %s, %s, %s, %s)
                             '''
+                            cursor.execute(_SQL, data)
+                            _SQL = '''select name, niche, link, identifier'''
+                            data = cursor.fetchall()
+                            data = (list(i) for i in data)
+                            return jsonify({"data":data})
                     return jsonify({"nicheEror":"You need to provide the niche"})
                 return jsonify({"nameError":"name of website need to be provided"})
             return jsonify({"linkError":"link of the website needs to be provided"})

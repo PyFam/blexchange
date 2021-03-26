@@ -119,6 +119,7 @@
 <script>
     $('#login, #signup').hide();
 
+    // when login form is submitted
     $('#login_form').submit(function(event) {
         $.post('/login', {
                 loginEmail: $('#login_email').val(),
@@ -150,6 +151,8 @@
             }
         );
     });
+
+    // when signup is submitted
 
     $('#signup_form').submit(function(event) {
         $.post('/login', {
