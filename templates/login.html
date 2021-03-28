@@ -70,7 +70,7 @@
                         </div>
                     </form>
 
-                    <form id=s ignup_form>
+                    <form id='signup_form'>
                         <div>
                             <h1 class="text-center my-3" style="color: #d00000;">SIGN UP</h1>
                         </div>
@@ -117,86 +117,103 @@
 </body>
 
 <script>
-    $('#login, #signup').hide();
-
-    // when login form is submitted
-    $('#login_form').submit(function(event) {
-        $.post('/login', {
-                loginEmail: $('#login_email').val(),
-                loginPassword: $('#login_password').val(),
-                type: $('#type').val()
-            },
-
-            function(data) {
-                // console.log('Done')
-                if (data.missingData) {
-                    $('#login_warning').text(data.missingData).show();
-                    $('#password_warning').hide();
-
-                } else if (data.emailError) {
-                    console.log(data.emailError)
-                    $('#login_warning').text(data.emailError).show();
-                    $('#password_warning').hide();
-
-                } else if (data.wrongPass) {
-                    $('#password_warning').text(data.wrongPass);
-                    $('#password_warning').show();
-                    $('#login_warning').hide();
-                }
-                else{
-                    location.href='/links'
-                }
-
-                event.preventDefault();
-            }
-        );
-    });
-
-    // when signup is submitted
-
-    $('#signup_form').submit(function(event) {
-        $.post('/login', {
-                email: $('#signup_email').val(),
-                password: $('#signup_password').val(),
-                con_password: $('#confirm_password').val(),
-                name: $('#name').val(),
-                username: $('#username').val(),
-                type: $('#type2').val()
-            },
-
-            function(data) {
-
-                if (data.passError) {
-                    $('#passWarning').text(data.passError).show();
-                    $('#con_passWarning, #nameWarning, #emailWarning, #usernameWarning').hide();
-                } else if (data.con_passWarning) {
-                    $('#con_passWarning').text(data.con_passWarning).show();
-                    $('#passWarning, #nameWarning, #emailWarning, #usernameWarning').hide();
-                } else if (data.passWarning) {
-                    $('#passWarning').text(data.passWarning).show();
-                    $('#con_passWarning, #nameWarning, #emailWarning, #usernameWarning').hide();
-                } else if (data.emailWarning) {
-                    $('#emailWarning').text(data.emailWarning).show();
-                    $('#passWarning, #con_passWarning, #nameWarning, #usernameWarning').hide();
-                } else if (data.usedEmail) {
-                    $('#emailWarning').text(data.usedEmail).show();
-                    $('#passWarning, #con_passWarning, #nameWarning, #usernameWarning').hide();
-                } else if (data.nameWarning) {
-                    $('#nameWarning').text(data.nameWarning).show();
-                    $('#passWarning, #con_passWarning, #emailWarning, #usernameWarning').hide();
-                } else if (data.usernameWarning) {
-                    $('#usernameWarning').text(data.usernameWarning).show();
-                    $('#passWarning, #con_passWarning, #emailWarning, #nameWarning').hide();
-                }
-                else{
-                    location.href='/links'
-                }
-                event.preventDefault();
-            });
-
+    $(document).ready(function(){
+  
+      $('#login, #signup').hide();
+  
+      $('#login_form').submit(function(event){
+  
+        $.ajax({
+          data: {
+            loginEmail: $('#login_email').val(), 
+            loginPassword: $('#login_password').val(), 
+            type: $('#type').val()
+          },
+          url: '/login',
+          method: 'POST'  
+        })
+  
+        .done(function(data){
+          // console.log('Done')
+          if(data.missingData){
+            $('#login_warning').text(data.missingData).show();
+            $('#password_warning').hide();
+  
+          }
+          else if (data.emailError){
+            console.log(data.emailError)
+            $('#login_warning').text(data.emailError).show();
+            $('#password_warning').hide();
+  
+          }
+          else if(data.wrongPass){
+            $('#password_warning').text(data.wrongPass);
+            $('#password_warning').show();
+            $('#login_warning').hide();
+          }
+          else{
+            location.href="/links";
+          }
+        })
+        event.preventDefault();
+      });
+  
+  
+      $('#signup_form').submit(function(event){
+        $.ajax({
+          data:{
+            email: $('#signup_email').val(),
+            password: $('#signup_password').val(),
+            con_password: $('#confirm_password').val(),
+            name: $('#name').val(),
+            username: $('#username').val(),
+            type: $('#type2').val()
+          },
+          url: '/login',
+          type : 'POST'
+        })
+        .done(function(data){
+          if (data.passError){
+            $('#passWarning').text(data.passError).show();
+            $('#con_passWarning, #nameWarning, #emailWarning, #usernameWarning').hide();
+          }
+          else if(data.con_passWarning){
+            $('#con_passWarning').text(data.con_passWarning).show();
+            $('#passWarning, #nameWarning, #emailWarning, #usernameWarning').hide();
+          }
+          else if(data.passWarning){
+            $('#passWarning').text(data.passWarning).show();
+            $('#con_passWarning, #nameWarning, #emailWarning, #usernameWarning').hide();
+          }
+          else if(data.emailWarning){
+            $('#emailWarning').text(data.emailWarning).show();
+            $('#passWarning, #con_passWarning, #nameWarning, #usernameWarning').hide();
+          }
+          else if(data.usedEmail){
+            $('#emailWarning').text(data.usedEmail).show();
+            $('#passWarning, #con_passWarning, #nameWarning, #usernameWarning').hide();
+          }
+          else if(data.nameWarning){
+            $('#nameWarning').text(data.nameWarning).show();
+            $('#passWarning, #con_passWarning, #emailWarning, #usernameWarning').hide();
+          }
+          else if(data.usernameWarning){
+            $('#usernameWarning').text(data.usernameWarning).show();
+            $('#nameWarning, #passWarning, #con_password, #email_warning').hide();
+          }
+          else{
+            location.href = '/links'
+          }
+  
+        });
+  
+  
+        event.preventDefault();
+      })
+  
+  
     });
 </script>
-
-</html>t>
+</html>
 
 </html>

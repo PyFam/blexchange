@@ -32,8 +32,7 @@
                 <a class="nav-link" href="contact.html">Contact Us</a>
             </li>
             <li class="nav-item m-md-2 btn-list">
-                <a id="login_link"  href="/login"><button type="button" id = "login" class="btn btn-danger">{{btn}}</button></a>
-                <a id="signup_link" href="/login"><button type="button" id = "signup" class="btn btn-outline-danger">{{btn2}}</button></a>
+                <a id="login_link"  href="/login"><button type="button" id = "logout" class="btn btn-danger">logout</button></a>
             </li>
             
         </div>
@@ -43,31 +42,32 @@
     <!-- NAVBAR ENDS -->
     
     <div class="container mt-4 shadow-sm p-5">
-        <div class="row">
-            <!-- <form> -->
-                <div class="col-md-4 mt-2" id="name">
-                    <label class="form-label">Blog's name</label>
-                    <input type="text" class="form-control" placeholder="Blog's Name">
-                    <small class="text-danger" style="display: none;"></small>
-                </div>
-                <div class="col-md-4 mt-2" id="niche">
-                    <label class="form-label">Niche</label>
-                    <input type="text" class="form-control" placeholder="Article or page niche">
-                    <small class="text-danger" style="display: none;"></small>
-                </div>
-                <div class="col-md-6 mt-2" id="link">
-                    <label class="form-label">Link</label>
-                    <input type="text" class="form-control" placeholder="Enter link">
-                    <small class="text-danger" style="display: none;"></small>
-                </div>
-                <div class="row">
-                    <div class="col-md-3 mt-3">
-                        <button type="submit" class="btn btn-danger">Add link</button>
+        <div class="container mt-4 shadow-sm p-5">
+            <div class="row">
+                <!-- <form> -->
+                    <div class="col-md-4 mt-2" id="name">
+                        <label class="form-label">Blog's name</label>
+                        <input type="text" class="form-control" placeholder="Blog's Name">
+                        <small class="text-danger" style="display: none;"></small>
                     </div>
-                    
-                </div>
-            <!-- </form> -->
-        </div>
+                    <div class="col-md-4 mt-2" id="niche">
+                        <label class="form-label">Niche</label>
+                        <input type="text" class="form-control" placeholder="Article or page niche">
+                        <small class="text-danger" style="display: none;"></small>
+                    </div>
+                    <div class="col-md-6 mt-2" id="link">
+                        <label class="form-label">URL</label>
+                        <input type="url" class="form-control" placeholder="Enter URL">
+                        <small class="text-danger" style="display: none;"></small>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3 mt-3">
+                            <button type="submit" class="btn btn-danger">Add link</button>
+                        </div>
+                        
+                    </div>
+                <!-- </form> -->
+            </div>
     </div>
 
     <div class="table-responsive container">
@@ -108,6 +108,8 @@
                         <button type="button" class="btn btn-outline-primary"id="requestLink">Request</button>
                     </form>
                 </div>
+
+                
                 
             </div>
         </div>
@@ -118,21 +120,27 @@
 
 <script>
     $(document).ready(function(){
-        if ($('#login').text()=='logout'){
-          $('#signup').hide();
-          $('#login_link').attr('href', '/logout')
-          console.log('logout btn')
-        }
-        else if($('#login').text()!='logout'){
-            $('#login').show();
-            $('#signup').show();
-            console.log('It\'s shows both')
-        }
-        else{
-                $('#login').hide();
-                $('#signup').hide();
-                console.log('No btn')
-        }
+        $('#log_link').submit(function(event){
+            $.post('/links', {blogName:$('#name').val(), niche:$('#niche').val(), link:$('#link').val()}, function(data){
+                if(data.nameWarning){
+                    $('#name small').text(data.nameWarning).show();
+                    $('#niche small, #link small').hide();
+                }
+                else if(data.nicheWarning){
+                    $('#niche small').text(data.nicheWarning).show();
+                    $('#name small, #link small').hide();
+                }
+                else if(data.linkWarning){
+                    $('#link small').text(data.linkWarning).show();
+                    $('#niche small, #name small').hide();
+                }
+            }
+
+            );
+            event.preventDefault();
+        })
+
+    
     });
 </script>
 </html>

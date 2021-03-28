@@ -10,6 +10,10 @@ app.config['db'] = {'host':'blexchange.mysql.pythonanywhere-services.com',
                     'user':'blexchange',
                     'password':'Nov52002#',
                     'database':'blexchange$default'}
+# app.config['db'] = {'host':'localhost',
+#                     'user':'incharge',
+#                     'password':'iamincharge',
+#                     'database':'dbexchange'}
 
 @app.route('/')
 def index():
@@ -36,26 +40,29 @@ def do_log():
                     for i in data:
                         if email not in i:
                             return jsonify({'emailError':'Email not associated'})
-                    _SQL = '''select password, email from users_info where email = %s'''
+                    _SQL = '''select password from users_info where email = %s'''
                     cursor.execute(_SQL, (email,))
-                    data = cursor.fetchall()
-                    if password == data[0][0]:
+                    data = cursor.fetchall()[0][0]
+                    if password == data:
                         return redirect('/links')
-                        session['username'] = data[0][1]
+                        session['username'] = email
                         session['login'] = True
                     return jsonify({"wrongPass":"Incorrect Password"})
             return jsonify({"missingData":"Email and password needs to be provided"})
 
         #signup code
         elif request.form['type'] == 'signupVal':
-            data = (request.form['name'], request.form['email'], request.form['username'], md5(request.form['password'].encode('ascii')).hexdigest(), md5(request.form['con_password'].encode('ascii')).hexdigest(), request.remote_addr, request.user_agent.browser)
-            name, email, username, password, con_password, IP, browers_string = data
+            # data = (request.form['name'], request.form['email'], request.form['username'], md5(request.form['password'].encode('ascii')).hexdigest(), md5(request.form['con_password'].encode('ascii')).hexdigest(), request.remote_addr, request.user_agent.browser)
+            data = (request.form['name'], request.form['email'], request.form['username'], request.form['password'], request.form['con_password'], request.remote_addr, request.user_agent.browser)
+            name, email, username, password, con_password, IP, brower_string = data
             if name:
                 if email:
                     if username:
                         if password:
+                            print(password)
                             if con_password:
-                                if con_password == password:
+                                print(con_password)
+                                if password == con_password:
                                     with UseDB(app.config['db']) as cursor:
                                         _SQL = '''select email from users_info'''
                                         cursor.execute(_SQL)
@@ -71,7 +78,7 @@ def do_log():
                                         cursor.execute(_SQL, (name, email, username, password, IP, brower_string))
                                         session['logged_in'] = True
                                         session['username'] = username
-                                        return redirect('/links')
+                                        # return redirect('/links')
                                 return jsonify({"passError":"Password and confirm password needs to be the same"})
                             return jsonify({"con_passWarning": "Password needs to be confirmed"})
                         return jsonify({"passWarning":"Password needs to be provided"})
@@ -101,11 +108,13 @@ def links():
                             _SQL = '''select name, niche, link, identifier'''
                             data = cursor.fetchall()
                             data = (list(i) for i in data)
-                            return jsonify({"data":data})
+                            return jsonify({"linkData":data})
                     return jsonify({"nicheEror":"You need to provide the niche"})
                 return jsonify({"nameError":"name of website need to be provided"})
             return jsonify({"linkError":"link of the website needs to be provided"})
         return 'Your not logged in'
+    return render_template('links.html')
+    
 
 
 if __name__ == '__main__':
