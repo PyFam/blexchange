@@ -74,21 +74,20 @@
         <table class="table">
             <thead>
                 <tr>
-                  <th scope="col">#</th>
                   <th scope="col">Blog's Name</th>
                   <th scope="col">Niche</th>
                   <th scope="col">Link</th>
                   <th scope="col">Exchange</th>
                 </tr>
-              </thead>
-              <tbody>
+            </thead>
+            <tbody id="table-body">
                 <tr>
-                  <th scope="row">1</th>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td>https://bit.ly/3tUKHej</td>
-                  <td data-bs-toggle="modal" data-bs-target="#exchangeModal"><button type="button" class="btn btn-primary">Exchange</button></td>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                    <td>https://bit.ly/3tUKHej</td>
+                    <td data-bs-toggle="modal" data-bs-target="#exchangeModal"><button type="button" class="btn btn-primary">Exchange</button></td>
                 </tr>
+            </tbody>
         </table>
     </div>
     <div class="modal" id="exchangeModal">
@@ -120,6 +119,14 @@
 
 <script>
     $(document).ready(function(){
+        let a = {{linkData|safe}};
+
+        for(let i of a){
+            $('#table-body').append("<tr></tr>");
+            for(let j of i){
+                $('#table-body:last-child').append(`<td>${j}</td>`);
+            }
+        }
         $('#log_link').submit(function(event){
             $.post('/links', {blogName:$('#name').val(), niche:$('#niche').val(), link:$('#link').val()}, function(data){
                 if(data.nameWarning){
@@ -138,7 +145,7 @@
 
             );
             event.preventDefault();
-        })
+        });
 
     
     });
