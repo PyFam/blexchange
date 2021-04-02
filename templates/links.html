@@ -58,6 +58,7 @@
                     <div class="col-md-6 mt-2" id="link">
                         <label class="form-label">URL</label>
                         <input type="url" class="form-control" placeholder="Enter URL">
+                        <input type="hidden">
                         <small class="text-danger" style="display: none;"></small>
                     </div>
                     <div class="row">
@@ -70,7 +71,8 @@
             </div>
     </div>
 
-    <div class="table-responsive container">
+    <div class="table-responsive container-fluid">
+        <div class="row p-3 shadow-sm"><h2 class="text-center">LATEST LINKS</h2></div>
         <table class="table">
             <thead>
                 <tr>
@@ -81,12 +83,6 @@
                 </tr>
             </thead>
             <tbody id="table-body">
-                <tr>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>https://bit.ly/3tUKHej</td>
-                    <td data-bs-toggle="modal" data-bs-target="#exchangeModal"><button type="button" class="btn btn-primary">Exchange</button></td>
-                </tr>
             </tbody>
         </table>
     </div>
@@ -100,15 +96,13 @@
                 <div class="modal-body">
                     <form>
                         <label class="form-label">Link</label>
-                        <input type="url" id="link" class="form-control mb-3" value="https://bit.ly/3tUKHej" disabled>
+                        <input type="url" id="linkInput" class="form-control mb-3" disabled>
                         <label class="form-label">Your Link</label>
                         <input type="url" id="yourLink" class="form-control mb-3" placeholder="Enter your link">
                         <button type="button" class="btn btn-outline-primary" id="giveLink">Give</button>
                         <button type="button" class="btn btn-outline-primary"id="requestLink">Request</button>
                     </form>
-                </div>
-
-                
+                </div>   
                 
             </div>
         </div>
@@ -120,13 +114,47 @@
 <script>
     $(document).ready(function(){
         let a = {{linkData|safe}};
-
         for(let i of a){
-            $('#table-body').append("<tr></tr>");
+            let tr = document.createElement("tr");
+            document.getElementById("table-body").appendChild(tr);
             for(let j of i){
-                $('#table-body:last-child').append(`<td>${j}</td>`);
+                let lastNode = document.getElementById("table-body").lastChild;
+                let td = document.createElement("td");
+                let c = lastNode.appendChild(td);
+                if (j == i[3]){
+                    let btn = document.createElement('button');
+                    let btn_text = document.createTextNode("Exchange");
+                    btn.append(btn_text);
+                    btn.setAttribute("class", "btn btn-primary");
+                    btn.setAttribute('id','exchanger');
+                    btn.setAttribute("data-bs-toggle","modal");
+                    btn.setAttribute("data-bs-target","#exchangeModal");
+                    btn.setAttribute("type", "button");
+                    btn.setAttribute('place', i[2]);
+                    c.appendChild(btn);
+                }else if(j==i[2]){
+                    let aLink = document.createElement('a');
+                    aLink.setAttribute("target", "_blank");
+                    aLink.setAttribute("href", j);
+                    let data = document.createTextNode(j)
+                    aLink.appendChild(data);
+                    td.appendChild(aLink);
+                }
+                else{
+                    let data = document.createTextNode(j);
+                    c.append(data);
+                }
             }
         }
+
+        $('#exchanger').click(function(){
+            console.log('clicked');
+            console.log('Getting button value');
+            let val = $(this).attr('place');
+            console.log(val);
+            $('#linkInput').attr('value', val)
+        });
+
         $('#log_link').submit(function(event){
             $.post('/links', {blogName:$('#name').val(), niche:$('#niche').val(), link:$('#link').val()}, function(data){
                 if(data.nameWarning){

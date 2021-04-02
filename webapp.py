@@ -96,7 +96,6 @@ def links():
             pass
         _SQL = '''select name, niche, link, identifier from links_log'''
         cursor.execute(_SQL)
-        print('Stopped at sql execution')
         data = cursor.fetchall()
         data.reverse()
         Data = []
