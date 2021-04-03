@@ -134,8 +134,10 @@
                     c.appendChild(btn);
                 }else if(j==i[2]){
                     let aLink = document.createElement('a');
+                    let locate = 'https:/'+'/'+j;
+                    aLink.setAttribute("href", locate);
                     aLink.setAttribute("target", "_blank");
-                    aLink.setAttribute("href", j);
+                    aLink.setAttribute("id", "ExchangeLink");
                     let data = document.createTextNode(j)
                     aLink.appendChild(data);
                     td.appendChild(aLink);
@@ -147,13 +149,12 @@
             }
         }
 
-        $('#exchanger').click(function(){
-            console.log('clicked');
-            console.log('Getting button value');
+        $('#exchanger').on('click',function(){
             let val = $(this).attr('place');
             console.log(val);
             $('#linkInput').attr('value', val)
         });
+
 
         $('#log_link').submit(function(event){
             $.post('/links', {blogName:$('#name').val(), niche:$('#niche').val(), link:$('#link').val()}, function(data){
