@@ -48,44 +48,46 @@
             <div class="row">
                 <!-- <form> -->
 
-                    <div class="col-md-4 mt-2" id="name">
-                        <label class="form-label">Blog's name</label>
-                        <input type="text" class="form-control" placeholder="Blog's Name">
-                        <small class="text-danger" style="display: none;"></small>
-                    </div>
-                    <div class="col-md-4 mt-2" id="niche">
-                        <label class="form-label">Niche</label>
-                        <input type="text" class="form-control" placeholder="Article or page niche">
-                        <small class="text-danger" style="display: none;"></small>
-                    </div>
-                    <div class="col-md-6 mt-2" id="link">
-                        <label class="form-label">URL</label>
-                        <input type="url" class="form-control" placeholder="Enter URL">
-                        <input type="hidden">
-                        <small class="text-danger" style="display: none;"></small>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-3 mt-3">
-                            <button type="submit" class="btn btn-danger">Add link</button>
-                        </div>
-                        
+                <div class="col-md-4 mt-2" id="name">
+                    <label class="form-label">Blog's name</label>
+                    <input type="text" class="form-control" placeholder="Blog's Name">
+                    <small class="text-danger" style="display: none;"></small>
+                </div>
+                <div class="col-md-4 mt-2" id="niche">
+                    <label class="form-label">Niche</label>
+                    <input type="text" class="form-control" placeholder="Article or page niche">
+                    <small class="text-danger" style="display: none;"></small>
+                </div>
+                <div class="col-md-6 mt-2" id="link">
+                    <label class="form-label">URL</label>
+                    <input type="url" class="form-control" placeholder="Enter URL">
+                    <input type="hidden">
+                    <small class="text-danger" style="display: none;"></small>
+                </div>
+                <div class="row">
+                    <div class="col-md-3 mt-3">
+                        <button type="submit" class="btn btn-danger">Add link</button>
                     </div>
 
                 </div>
-                <!-- </form> -->
+
             </div>
+            <!-- </form> -->
+        </div>
 
     </div>
 
     <div class="table-responsive container-fluid">
-        <div class="row p-3 shadow-sm"><h2 class="text-center">LATEST LINKS</h2></div>
+        <div class="row p-3 shadow-sm">
+            <h2 class="text-center">LATEST LINKS</h2>
+        </div>
         <table class="table">
             <thead>
                 <tr>
-                  <th scope="col">Blog's Name</th>
-                  <th scope="col">Niche</th>
-                  <th scope="col">Link</th>
-                  <th scope="col">Exchange</th>
+                    <th scope="col">Blog's Name</th>
+                    <th scope="col">Niche</th>
+                    <th scope="col">Link</th>
+                    <th scope="col">Exchange</th>
                 </tr>
             </thead>
             <tbody id="table-body">
@@ -106,10 +108,10 @@
                         <label class="form-label">Your Link</label>
                         <input type="url" id="yourLink" class="form-control mb-3" placeholder="Enter your link">
                         <button type="button" class="btn btn-outline-primary" id="giveLink">Give</button>
-                        <button type="button" class="btn btn-outline-primary"id="requestLink">Request</button>
+                        <button type="button" class="btn btn-outline-primary" id="requestLink">Request</button>
                     </form>
-                </div>   
-                
+                </div>
+
             </div>
         </div>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.6.0/dist/umd/popper.min.js" integrity="sha384-KsvD1yqQ1/1+IA7gi3P0tyJcT3vR+NdBTt13hSJ2lnve8agRGXTTyNaBYmCR/Nwi" crossorigin="anonymous"></script>
@@ -117,67 +119,65 @@
 </body>
 
 <script>
-    $(document).ready(function(){
-        let a = {{linkData|safe}};
-        for(let i of a){
+    $(function() {
+        let a ='{{linkData | safe}}';
+        for (let i of a) {
             let tr = document.createElement("tr");
             document.getElementById("table-body").appendChild(tr);
-            for(let j of i){
+            for (let j of i) {
                 let lastNode = document.getElementById("table-body").lastChild;
                 let td = document.createElement("td");
                 let c = lastNode.appendChild(td);
-                if (j == i[3]){
+                if (j == i[3]) {
                     let btn = document.createElement('button');
                     let btn_text = document.createTextNode("Exchange");
                     btn.append(btn_text);
                     btn.setAttribute("class", "btn btn-primary");
-                    btn.setAttribute('id','exchanger');
-                    btn.setAttribute("data-bs-toggle","modal");
-                    btn.setAttribute("data-bs-target","#exchangeModal");
+                    btn.setAttribute('id', 'exchanger');
+                    btn.setAttribute("data-bs-toggle", "modal");
+                    btn.setAttribute("data-bs-target", "#exchangeModal");
                     btn.setAttribute("type", "button");
                     btn.setAttribute('place', i[2]);
                     c.appendChild(btn);
-                }else if(j==i[2]){
+                } else if (j == i[2]) {
                     let aLink = document.createElement('a');
-                    let locate = 'https:/'+'/'+j;
+                    let locate = 'https:/' + '/' + j;
                     aLink.setAttribute("href", locate);
                     aLink.setAttribute("target", "_blank");
                     aLink.setAttribute("id", "ExchangeLink");
                     let data = document.createTextNode(j)
                     aLink.appendChild(data);
                     td.appendChild(aLink);
-                }
-                else{
+                } else {
                     let data = document.createTextNode(j);
                     c.append(data);
                 }
             }
         }
 
-        $('#exchanger').on('click',function(){
+        $('#exchanger').click(function() {
             let val = $(this).attr('place');
             console.log(val);
             $('#linkInput').attr('value', val)
         });
 
 
-        $('#log_link').submit(function(event){
-            $.post('/links', {blogName:$('#name').val(), niche:$('#niche').val(), link:$('#link').val()}, function(data){
-                if(data.nameWarning){
+        $('#log_link').submit(function(event) {
+            $.post('/links', {
+                blogName: $('#name').val(),
+                niche: $('#niche').val(),
+                link: $('#link').val()
+            }, function(data) {
+                if (data.nameWarning) {
                     $('#name small').text(data.nameWarning).show();
                     $('#niche small, #link small').hide();
                 }
 
-            );
-            event.preventDefault();
+                event.preventDefault();
+            });
         });
-
-
     });
-</script>
 
-</html>
-); event.preventDefault(); });
 </script>
 
 </html>
