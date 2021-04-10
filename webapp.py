@@ -93,15 +93,21 @@ def do_log():
 def links():
     with UseDB(app.config['db']) as cursor:
         if request.method == 'POST':
-            pass
+            data = (request.form['blogName'], request.form['niche'], request.form['url'], request.remote_addr, request.user_agent.browser)
+            blogName, niche, url, *_ = data
+            if blogName:
+                if niche:
+                    if url:
+                        _SQL = '''insert into links_log(link, name, niche, identifier, IP, browser_string) values(%s, %s, %s, %s, %s, %s)'''
+                        cursor.execute(_SQL, data)
         _SQL = '''select name, niche, link, identifier from links_log'''
         cursor.execute(_SQL)
-        print('Stopped at sql execution')
         data = cursor.fetchall()
         data.reverse()
         Data = []
         Data = ([list(i) for i in data if len(Data) != 50])
         return render_template('links.html', linkData=json.dumps(data))
+
 
 
 if __name__ == '__main__':
