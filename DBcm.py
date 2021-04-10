@@ -13,6 +13,7 @@ class UseDB:
             self.conn = connect(**self.config)
             self.cursor = self.conn.cursor()
             return self.cursor
+
         except errors.InterfaceError as err:
             return ConnectionError(err)
         except errors.ProgrammingError as err:
@@ -22,6 +23,7 @@ class UseDB:
         self.conn.commit()
         self.conn.close()
         self.cursor.close()
+        
         if exc_type is errors.ProgrammingError:
             return SQLError(exc_value)
         elif exc_type:

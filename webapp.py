@@ -32,7 +32,7 @@ def do_log():
     if request.method == 'POST':
         #login code
         if request.form['type'] == 'loginVal':
-            email,password = request.form['loginEmail'], md5(request.form['loginPassword'].encode('ascii')).hexdigest()
+            email,password = request.form['loginEmail'], md5(request.form['loginPassword'].encode()).hexdigest()
             if email and password:
                 with UseDB(app.config['db']) as cursor:
                     _SQL = '''select email from users_info'''
@@ -54,7 +54,7 @@ def do_log():
 
         #signup code
         elif request.form['type'] == 'signupVal':
-            data = (request.form['name'], request.form['email'], request.form['username'], md5(request.form['password'].encode('ascii')).hexdigest(), md5(request.form['con_password'].encode('ascii')).hexdigest(), request.remote_addr, request.user_agent.browser)
+            data = (request.form['name'], request.form['email'], request.form['username'], md5(request.form['password'].encode()).hexdigest(), md5(request.form['con_password'].encode()).hexdigest(), request.remote_addr, request.user_agent.browser)
             # data = (request.form['name'], request.form['email'], request.form['username'], request.form['password'], request.form['con_password'], request.remote_addr, request.user_agent.browser)
             name, email, username, password, con_password, IP, brower_string = data
             if name:
